@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  namespace: default
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: jellyfin
+        image: jellyfin/jellyfin
+        ports:
+          - containerPort: 8096
+            name: jellyfin-port
+        volumeMounts:
+        - mountPath: /movies
+          name: movies
+          readOnly: true
+        - mountPath: /cache
+          name: cache-jelly
+        - mountPath: /config
+          name: config-jelly
+      volumes:
+      - name: movies
+        hostPath:
+          path: {{ .Values.movies }}
+      - name: config-jelly
+        persistentVolumeClaim:
+          claimName: config-jelly
+      - name: cache-jelly 
+        persistentVolumeClaim:
+          claimName: cache-jelly 
+---
+
