@@ -6,11 +6,11 @@ metadata:
 spec:
   selector:
     app: {{ .Release.Name }} 
-  type: LoadBalancer
+  type: ClusterIP 
   ports:
     - name: jellyfin-port
       protocol: TCP
-      port: 8906 
+      port: 8096 
       targetPort: jellyfin-port
 ---
 
